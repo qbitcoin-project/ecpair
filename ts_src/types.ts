@@ -21,9 +21,10 @@ export const NetworkSchema = v.object({
     public: Uint32Schema,
     private: Uint32Schema,
   }),
-  pubKeyHash: Uint8Schema,
-  scriptHash: Uint8Schema,
+  pubKeyHash: Uint32Schema,
+  scriptHash: Uint32Schema,
   wif: Uint8Schema,
+  addrMagic: v.optional(v.instance(Uint8Array)),
 });
 
 export const Buffer256Bit = v.pipe(v.instance(Uint8Array), v.length(32));

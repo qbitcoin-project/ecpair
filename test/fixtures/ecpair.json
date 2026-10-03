@@ -71,6 +71,24 @@
       "address": "1GrLCmVQXoyJXaPJQdqssNqwxvha1eUo2E",
       "WIF": "L5oLkpV3aqBjhki6LmvChTCV6odsp4SXM6FfU2Gppt5kFLaHLuZ9",
       "tweak": "KyGComs4RrHnqnn5ku3WxA6CVFmHJV61bm8V36Uu4WMsRjjdeAVr"
+    },
+    {
+      "d": "6c4313b03f2e7324d75e642f0ab81b734b724e13fec930f309e222470236d66b",
+      "Q": "044289801366bcee6172b771cf5a7f13aaecd237a0b9a1ff9d769cabc2e6b70a34cec320a0565fb7caf11b1ca2f445f9b7b012dda5718b3cface369ee3a034ded6",
+      "compressed": false,
+      "network": "qbitcoin",
+      "address": "bqh5pykqfUud8nSQtzMGhjW836SaUM5TFjJ",
+      "WIF": "5JdxzLtFPHNe7CAL8EBC6krdFv9pwPoRo4e3syMZEQT9srmK8hh",
+      "tweak": "5KRotqK8oMBrMGdievBdwHUj23Lfsj5AYwuFM3rmtYE7rmwTEsf"
+    },
+    {
+      "d": "0000000000000000000000000000000000000000000000000000000000000001",
+      "Q": "0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8",
+      "compressed": false,
+      "network": "qbitcoinTestnet",
+      "address": "btqW9ERQ6qwZbN6FAnLZJf7J7PAWjQFZffbt",
+      "WIF": "91avARGdfge8E4tZfYLoxeJ5sGBdNJQH4kvjJoQFacbgwmaKkrx",
+      "tweak": "923mEycKmqi28knPgwo917FZRaYebsnvcyhmfdgy68FhV5WnE9q"
     }
   ],
   "invalid": {

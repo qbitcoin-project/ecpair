@@ -3,3 +3,5 @@ import { NetworkSchema } from './types';
 export type Network = v.InferOutput<typeof NetworkSchema>;
 export declare const bitcoin: Network;
 export declare const testnet: Network;
+export declare const qbitcoin: Network;
+export declare const qbitcoinTestnet: Network;

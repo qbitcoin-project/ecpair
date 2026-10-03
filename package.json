@@ -1,6 +1,6 @@
 {
-  "name": "ecpair",
-  "version": "3.0.0",
+  "name": "@qbtc/ecpair",
+  "version": "4.0.0",
   "description": "Client-side Bitcoin JavaScript library ECPair",
   "type": "module",
   "main": "src/cjs/index.cjs",
@@ -41,16 +41,18 @@
     "mocha:ts": "mocha --recursive",
     "nobuild:coverage-report": "c8 report --reporter=lcov",
     "nobuild:coverage-html": "c8 report --reporter=html",
-    "nobuild:coverage": "c8 --check-coverage --exclude='**/*.cjs' --branches 90 --functions 90 --lines 90 npm run unit",
+    "nobuild:coverage": "c8 --all --include='ts_src/**/*.ts' --extension=.ts --check-coverage --branches 90 --functions 90 --lines 90 npm run nobuild:unit",
     "nobuild:unit": "npm run mocha:ts -- 'test/*.ts'",
-    "prettier": "prettier \"ts_src/**/*.ts\" \"test/**/*.ts\" --ignore-path ./.prettierignore",
+    "prettier": "prettier \"ts_src/**/*.ts\" \"test/**/*.ts\" \"scripts/**/*.cjs\" --ignore-path ./.prettierignore",
     "prettierjs": "prettier \"src/**/*.js\" --ignore-path ./.prettierignore",
     "test": "npm run build && npm run format:ci && npm run lint && npm run nobuild:coverage",
-    "unit": "npm run build && npm run nobuild:unit"
+    "unit": "npm run build && npm run nobuild:unit",
+    "prepack": "npm run build",
+    "pack:check": "node scripts/check-package.cjs"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitcoinjs/ecpair.git"
+    "url": "git+https://github.com/qbitcoin-project/ecpair.git"
   },
   "files": [
     "src"
@@ -74,5 +76,13 @@
     "tsx": "^4.16.5",
     "typescript": "^5.0.4"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/qbitcoin-project/ecpair#readme",
+  "bugs": {
+    "url": "https://github.com/qbitcoin-project/ecpair/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

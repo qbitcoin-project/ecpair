@@ -1,15 +1,26 @@
 import * as assert from 'assert';
 import { createHash } from 'crypto';
 import { beforeEach, describe, it } from 'mocha';
-import { ECPairFactory, networks as NETWORKS } from '..';
-import type { ECPairInterface, TinySecp256k1Interface } from '..';
+import { ECPairFactory, networks as NETWORKS } from '../ts_src';
+import type { ECPairInterface, TinySecp256k1Interface } from '../ts_src';
 import fixtures from './fixtures/ecpair.json';
 import * as tinysecp from 'tiny-secp256k1';
 import * as tools from 'uint8array-tools';
 
 const ECPair = ECPairFactory(tinysecp);
 
-const NETWORKS_LIST = Object.values(NETWORKS);
+// Lookup of all networks referenced by fixtures (qbitcoin shares wif=0x80
+// with bitcoin, so it cannot be auto-detected and must always be passed
+// explicitly).
+const ALL_NETWORKS: Record<string, (typeof NETWORKS)[keyof typeof NETWORKS]> = {
+  ...NETWORKS,
+};
+
+// Networks safe for auto-detection by wif byte (excludes qbitcoin* which
+// would collide with bitcoin/testnet wif bytes).
+const NETWORKS_LIST = Object.values(NETWORKS).filter(
+  (n) => !('addrMagic' in n),
+);
 const ZERO = Buffer.alloc(32, 0);
 const ONE = Buffer.from(
   '0000000000000000000000000000000000000000000000000000000000000001',
@@ -117,7 +128,7 @@ describe('ECPair', () => {
   describe('fromWIF', () => {
     fixtures.valid.forEach((f) => {
       it('imports ' + f.WIF + ' (' + f.network + ')', () => {
-        const network = (NETWORKS as any)[f.network];
+        const network = (ALL_NETWORKS as any)[f.network];
         const keyPair = ECPair.fromWIF(f.WIF, network);
 
         assert.strictEqual(tools.toHex(keyPair.privateKey!), f.d);
@@ -126,15 +137,25 @@ describe('ECPair', () => {
       });
     });
 
-    fixtures.valid.forEach((f) => {
-      it('imports ' + f.WIF + ' (via list of networks)', () => {
-        const keyPair = ECPair.fromWIF(f.WIF, NETWORKS_LIST);
+    // Networks that share a wif byte with another network (e.g. qbitcoin
+    // shares 0x80 with bitcoin) cannot be auto-detected from a network list,
+    // so we restrict to fixtures whose network is present in NETWORKS_LIST.
+    const detectableNetworks = new Set(NETWORKS_LIST);
+    fixtures.valid
+      .filter(
+        (f) =>
+          f.network in NETWORKS &&
+          detectableNetworks.has((NETWORKS as any)[f.network]),
+      )
+      .forEach((f) => {
+        it('imports ' + f.WIF + ' (via list of networks)', () => {
+          const keyPair = ECPair.fromWIF(f.WIF, NETWORKS_LIST);
 
-        assert.strictEqual(tools.toHex(keyPair.privateKey!), f.d);
-        assert.strictEqual(keyPair.compressed, f.compressed);
-        assert.strictEqual(keyPair.network, (NETWORKS as any)[f.network]);
+          assert.strictEqual(tools.toHex(keyPair.privateKey!), f.d);
+          assert.strictEqual(keyPair.compressed, f.compressed);
+          assert.strictEqual(keyPair.network, (NETWORKS as any)[f.network]);
+        });
       });
-    });
 
     fixtures.invalid.fromWIF.forEach((f) => {
       it('throws on ' + f.WIF, () => {
@@ -259,8 +280,8 @@ describe('ECPair', () => {
   describe('tweak', () => {
     fixtures.valid.forEach((f) => {
       it('tweaks private and public key for ' + f.WIF, () => {
-        const network = (NETWORKS as any)[f.network];
-        const keyPair = ECPair.fromWIF(f.WIF, NETWORKS_LIST);
+        const network = (ALL_NETWORKS as any)[f.network];
+        const keyPair = ECPair.fromWIF(f.WIF, network);
         const hash = tapTweakHash(Buffer.from(keyPair.publicKey.slice(1, 33)));
 
         const tweakedKeyPair = keyPair.tweak(hash);
@@ -284,8 +305,8 @@ describe('ECPair', () => {
   describe('.network', () => {
     fixtures.valid.forEach((f) => {
       it('returns ' + f.network + ' for ' + f.WIF, () => {
-        const network = (NETWORKS as any)[f.network];
-        const keyPair = ECPair.fromWIF(f.WIF, NETWORKS_LIST);
+        const network = (ALL_NETWORKS as any)[f.network];
+        const keyPair = ECPair.fromWIF(f.WIF, network);
 
         assert.strictEqual(keyPair.network, network);
       });
